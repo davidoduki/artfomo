@@ -195,13 +195,13 @@ export const mediums = [...new Set(artists.map((a) => a.medium))].sort();
 export function getMomentumColor(momentum: MomentumLevel) {
   switch (momentum) {
     case "breakout":
-      return "text-rose-400 bg-rose-400/10 border-rose-400/20";
+      return "text-red-700 bg-red-50 border-red-200";
     case "rising":
-      return "text-purple-400 bg-purple-400/10 border-purple-400/20";
+      return "text-amber-700 bg-amber-50 border-amber-200";
     case "steady":
-      return "text-blue-400 bg-blue-400/10 border-blue-400/20";
+      return "text-blue-700 bg-blue-50 border-blue-200";
     case "emerging":
-      return "text-zinc-400 bg-zinc-400/10 border-zinc-400/20";
+      return "text-stone-600 bg-stone-100 border-stone-200";
   }
 }
 
