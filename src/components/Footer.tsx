@@ -1,9 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-black py-10 text-center text-sm text-zinc-500">
+    <footer className="border-t border-stone-200 bg-[#fafaf8] py-10 text-center text-sm text-stone-400">
       <div className="mx-auto max-w-5xl px-6">
-        <p className="font-semibold text-white">
-          Art<span className="text-purple-400">FOMO</span>
+        <p className="font-semibold text-stone-900">
+          Art<span className="text-red-700">FOMO</span>
         </p>
         <p className="mt-2">
           The data trove for collectors and investors who want to spot rising

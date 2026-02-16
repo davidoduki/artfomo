@@ -42,13 +42,13 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="bg-zinc-950 py-24 text-white">
+    <section id="features" className="border-t border-stone-200 bg-white py-24">
       <div className="mx-auto max-w-5xl px-6">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-purple-400">
+          <p className="text-sm font-semibold uppercase tracking-widest text-stone-400">
             Key Features
           </p>
-          <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+          <h2 className="mt-4 text-3xl font-bold text-stone-900 sm:text-4xl">
             The signals that matter
           </h2>
         </div>
@@ -57,13 +57,13 @@ export default function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur transition hover:border-purple-500/30 hover:bg-white/[.07]"
+              className="group rounded-2xl border border-stone-200 bg-[#fafaf8] p-8 transition hover:border-stone-300 hover:shadow-md"
             >
-              <div className="mb-4 inline-flex rounded-lg bg-purple-500/10 p-3 text-purple-400">
+              <div className="mb-4 inline-flex rounded-lg bg-stone-100 p-3 text-stone-700">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="mt-2 text-zinc-400 leading-relaxed">
+              <h3 className="text-xl font-semibold text-stone-900">{feature.title}</h3>
+              <p className="mt-2 text-stone-500 leading-relaxed">
                 {feature.description}
               </p>
             </div>
