@@ -13,10 +13,16 @@ export default function Navbar() {
             Directory
           </a>
           <a
-            href="#waitlist"
+            href="/blog"
+            className="text-sm font-medium text-stone-500 transition hover:text-stone-900"
+          >
+            Blog
+          </a>
+          <a
+            href="/login"
             className="rounded-full bg-stone-900 px-5 py-2 text-sm font-medium text-white transition hover:bg-stone-800"
           >
-            Get Early Access
+            Sign In
           </a>
         </div>
       </div>
