@@ -37,9 +37,9 @@ export default function Hero() {
 
         {/* Headline */}
         <h1 className="text-5xl font-bold tracking-tight text-stone-900 sm:text-7xl leading-[1.1]">
-          Don&apos;t Miss the Next{" "}
+          Don&apos;t Miss the Next
           <span
-            className="inline-block italic text-red-700 transition-opacity duration-500"
+            className="block italic text-red-700 transition-opacity duration-500"
             style={{ opacity: visible ? 1 : 0 }}
           >
             {ARTISTS[index]}
