@@ -1,4 +1,63 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+
+const ARTISTS = [
+  "Basquiat",
+  "Kusama",
+  "Banksy",
+  "Haring",
+  "Koons",
+  "Abramović",
+  "Hockney",
+  "Wiley",
+];
+
+const TYPE_SPEED = 100;
+const DELETE_SPEED = 60;
+const PAUSE_BEFORE_DELETE = 2000;
+const PAUSE_BEFORE_TYPE = 400;
+
 export default function Hero() {
+  const [displayed, setDisplayed] = useState("Basquiat");
+  const [artistIndex, setArtistIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const tick = useCallback(() => {
+    const currentArtist = ARTISTS[artistIndex];
+
+    if (!isDeleting) {
+      // Typing
+      if (displayed.length < currentArtist.length) {
+        setDisplayed(currentArtist.slice(0, displayed.length + 1));
+        return TYPE_SPEED;
+      }
+      // Done typing — pause then start deleting
+      setIsDeleting(true);
+      return PAUSE_BEFORE_DELETE;
+    } else {
+      // Deleting
+      if (displayed.length > 0) {
+        setDisplayed(currentArtist.slice(0, displayed.length - 1));
+        return DELETE_SPEED;
+      }
+      // Done deleting — move to next artist
+      setIsDeleting(false);
+      setArtistIndex((prev) => (prev + 1) % ARTISTS.length);
+      return PAUSE_BEFORE_TYPE;
+    }
+  }, [displayed, artistIndex, isDeleting]);
+
+  useEffect(() => {
+    const delay = tick();
+    const timeout = setTimeout(() => {
+      // Force a re-render which triggers tick again
+      setDisplayed((d) => d); // no-op to trigger effect
+      tick();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [tick]);
+
   return (
     <section className="relative overflow-hidden bg-[#fafaf8]">
       <div className="mx-auto max-w-5xl px-6 pt-32 pb-8 text-center">
@@ -12,7 +71,8 @@ export default function Hero() {
         <h1 className="text-5xl font-bold tracking-tight text-stone-900 sm:text-7xl leading-[1.1]">
           Don&apos;t Miss the Next{" "}
           <span className="italic text-red-700">
-            Basquiat
+            {displayed}
+            <span className="inline-block w-[3px] h-[0.85em] bg-red-700 align-middle ml-0.5 animate-[blink_1s_step-end_infinite]" />
           </span>
         </h1>
 
