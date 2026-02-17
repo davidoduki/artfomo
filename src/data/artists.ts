@@ -14,6 +14,7 @@ export interface Artist {
   recentDrops: { title: string; date: string; price: string; soldOut: boolean }[];
   tags: string[];
   imageColor: string; // placeholder color for mock
+  image: string; // artwork image path
 }
 
 export const artists: Artist[] = [
@@ -39,6 +40,7 @@ export const artists: Artist[] = [
     ],
     tags: ["mixed media", "textiles", "identity", "african art"],
     imageColor: "from-amber-600 to-rose-600",
+    image: "/images/amara-osei.svg",
   },
   {
     slug: "kai-tanaka",
@@ -61,6 +63,7 @@ export const artists: Artist[] = [
     ],
     tags: ["digital", "sculpture", "ceramics", "algorithmic"],
     imageColor: "from-cyan-600 to-blue-600",
+    image: "/images/kai-tanaka.svg",
   },
   {
     slug: "elena-vasquez",
@@ -83,6 +86,7 @@ export const artists: Artist[] = [
     ],
     tags: ["painting", "surrealism", "climate", "latin american art"],
     imageColor: "from-green-600 to-emerald-500",
+    image: "/images/elena-vasquez.svg",
   },
   {
     slug: "marcus-reed",
@@ -105,6 +109,7 @@ export const artists: Artist[] = [
     ],
     tags: ["photography", "documentary", "urban", "american"],
     imageColor: "from-orange-600 to-red-600",
+    image: "/images/marcus-reed.svg",
   },
   {
     slug: "yuki-chen",
@@ -125,6 +130,7 @@ export const artists: Artist[] = [
     ],
     tags: ["installation", "light art", "immersive", "technology"],
     imageColor: "from-violet-600 to-indigo-600",
+    image: "/images/yuki-chen.svg",
   },
   {
     slug: "omar-hassan",
@@ -146,6 +152,7 @@ export const artists: Artist[] = [
     ],
     tags: ["painting", "abstract", "calligraphy", "street art"],
     imageColor: "from-rose-600 to-pink-600",
+    image: "/images/omar-hassan.svg",
   },
   {
     slug: "freya-lindstrom",
@@ -166,6 +173,7 @@ export const artists: Artist[] = [
     ],
     tags: ["textile", "sustainability", "craft", "scandinavian"],
     imageColor: "from-teal-600 to-cyan-600",
+    image: "/images/freya-lindstrom.svg",
   },
   {
     slug: "diego-morales",
@@ -187,6 +195,7 @@ export const artists: Artist[] = [
     ],
     tags: ["sculpture", "bronze", "nature", "brazilian art"],
     imageColor: "from-lime-600 to-green-600",
+    image: "/images/diego-morales.svg",
   },
 ];
 

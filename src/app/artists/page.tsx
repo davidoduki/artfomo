@@ -135,10 +135,14 @@ export default function ArtistsDirectory() {
                 href={`/artists/${artist.slug}`}
                 className="group rounded-2xl border border-stone-200 bg-white p-6 transition hover:border-stone-300 hover:shadow-md"
               >
-                {/* Placeholder image */}
-                <div
-                  className={`mb-5 h-40 rounded-xl bg-gradient-to-br ${artist.imageColor} opacity-80 transition group-hover:opacity-100`}
-                />
+                {/* Artist artwork */}
+                <div className="mb-5 h-40 overflow-hidden rounded-xl">
+                  <img
+                    src={artist.image}
+                    alt={`Artwork by ${artist.name}`}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                  />
+                </div>
 
                 {/* Momentum badge */}
                 <div className="mb-3 flex items-center justify-between">

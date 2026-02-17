@@ -54,10 +54,14 @@ export default async function ArtistPage({
 
       {/* Hero banner */}
       <div className="relative pt-16">
-        <div
-          className={`h-64 bg-gradient-to-br ${artist.imageColor} opacity-60`}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#fafaf8] via-[#fafaf8]/50 to-transparent" />
+        <div className="h-72 overflow-hidden">
+          <img
+            src={artist.image}
+            alt={`Artwork by ${artist.name}`}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#fafaf8] via-[#fafaf8]/40 to-transparent" />
       </div>
 
       {/* Main content */}
@@ -216,9 +220,13 @@ export default async function ArtistPage({
                 href={`/artists/${a.slug}`}
                 className="group rounded-xl border border-stone-200 bg-white p-5 transition hover:border-stone-300 hover:shadow-md"
               >
-                <div
-                  className={`mb-4 h-28 rounded-lg bg-gradient-to-br ${a.imageColor} opacity-70 transition group-hover:opacity-90`}
-                />
+                <div className="mb-4 h-28 overflow-hidden rounded-lg">
+                  <img
+                    src={a.image}
+                    alt={`Artwork by ${a.name}`}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                  />
+                </div>
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold text-stone-900 group-hover:text-red-700 transition">
                     {a.name}

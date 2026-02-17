@@ -1,7 +1,7 @@
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-[#fafaf8]">
-      <div className="mx-auto max-w-5xl px-6 pt-32 pb-24 text-center">
+      <div className="mx-auto max-w-5xl px-6 pt-32 pb-8 text-center">
         {/* Badge */}
         <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-1.5 text-sm text-stone-600 shadow-sm">
           <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
@@ -38,9 +38,22 @@ export default function Hero() {
             See Trending Artists
           </a>
         </div>
+      </div>
 
-        {/* Social proof */}
-        <div className="mt-16 grid gap-4 sm:grid-cols-3">
+      {/* Hero image — gallery scene */}
+      <div className="mx-auto mt-12 max-w-5xl px-6 pb-24">
+        <div className="overflow-hidden rounded-2xl border border-stone-200 shadow-lg">
+          <img
+            src="/images/hero-gallery.svg"
+            alt="Gallery interior with contemporary artwork on display"
+            className="w-full"
+          />
+        </div>
+      </div>
+
+      {/* Social proof */}
+      <div className="mx-auto max-w-5xl px-6 pb-24">
+        <div className="grid gap-4 sm:grid-cols-3">
           {[
             "Built from marketplace signals, gallery activity, and collector demand",
             "Updated daily with real-time momentum tracking",

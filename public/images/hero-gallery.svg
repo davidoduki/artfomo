@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#faf9f6"/>
+      <stop offset="100%" stop-color="#f0ece4"/>
+    </linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c2185b"/>
+      <stop offset="100%" stop-color="#e65100"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1565c0"/>
+      <stop offset="100%" stop-color="#00838f"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2e7d32"/>
+      <stop offset="100%" stop-color="#558b2f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="800" fill="url(#bg)"/>
+  <!-- Gallery wall line -->
+  <line x1="0" y1="680" x2="1600" y2="680" stroke="#d7cfc2" stroke-width="1"/>
+  <!-- Frame 1 -->
+  <rect x="120" y="180" width="320" height="380" rx="2" fill="#fff" stroke="#b8a89a" stroke-width="2"/>
+  <rect x="140" y="200" width="280" height="340" fill="url(#g1)" opacity="0.85"/>
+  <circle cx="240" cy="320" r="60" fill="#fff" opacity="0.2"/>
+  <circle cx="320" cy="400" r="90" fill="#1a1a1a" opacity="0.15"/>
+  <path d="M160 480 Q250 300 400 440" stroke="#fff" stroke-width="3" fill="none" opacity="0.4"/>
+  <!-- Frame 2 -->
+  <rect x="540" y="140" width="400" height="440" rx="2" fill="#fff" stroke="#b8a89a" stroke-width="2"/>
+  <rect x="560" y="160" width="360" height="400" fill="url(#g2)" opacity="0.85"/>
+  <rect x="620" y="220" width="120" height="120" fill="#fff" opacity="0.15" transform="rotate(15 680 280)"/>
+  <rect x="720" y="340" width="80" height="160" fill="#fff" opacity="0.1"/>
+  <path d="M580 500 Q700 250 900 450" stroke="#fff" stroke-width="4" fill="none" opacity="0.3"/>
+  <circle cx="780" cy="300" r="40" fill="none" stroke="#fff" stroke-width="2" opacity="0.3"/>
+  <!-- Frame 3 -->
+  <rect x="1060" y="200" width="360" height="360" rx="2" fill="#fff" stroke="#b8a89a" stroke-width="2"/>
+  <rect x="1080" y="220" width="320" height="320" fill="url(#g3)" opacity="0.85"/>
+  <path d="M1100 500 L1200 300 L1300 420 L1380 280" stroke="#fff" stroke-width="3" fill="none" opacity="0.4"/>
+  <circle cx="1240" cy="380" r="70" fill="#fff" opacity="0.12"/>
+  <rect x="1150" y="280" width="60" height="60" fill="#fff" opacity="0.2" transform="rotate(30 1180 310)"/>
+  <!-- Floor shadow -->
+  <rect x="0" y="680" width="1600" height="120" fill="#e8e2d8" opacity="0.5"/>
+  <!-- Subtle figure silhouette -->
+  <ellipse cx="800" cy="670" rx="25" ry="6" fill="#c4b8a8" opacity="0.4"/>
+  <path d="M785 670 Q790 590 800 560 Q810 590 815 670" fill="#a89888" opacity="0.3"/>
+  <circle cx="800" cy="550" r="12" fill="#a89888" opacity="0.3"/>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e11d48"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Arabic calligraphy inspired gestural strokes -->
+  <g stroke="#fff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 350 Q200 200 300 250 Q400 300 350 400 Q300 500 400 480 Q500 460 550 350" stroke-width="8" opacity="0.25"/>
+    <path d="M250 150 Q300 180 280 250 Q260 320 300 350" stroke-width="5" opacity="0.2"/>
+    <path d="M500 100 Q550 150 520 220 Q490 290 540 320 Q590 350 600 280" stroke-width="6" opacity="0.22"/>
+    <path d="M600 400 Q650 350 680 400 Q710 450 680 500" stroke-width="4" opacity="0.18"/>
+  </g>
+  <!-- Spray paint texture dots -->
+  <g fill="#fff">
+    <circle cx="200" cy="280" r="4" opacity="0.12"/>
+    <circle cx="220" cy="260" r="2" opacity="0.1"/>
+    <circle cx="180" cy="300" r="3" opacity="0.08"/>
+    <circle cx="350" cy="350" r="5" opacity="0.1"/>
+    <circle cx="380" cy="330" r="2" opacity="0.08"/>
+    <circle cx="500" cy="200" r="3" opacity="0.1"/>
+    <circle cx="530" cy="180" r="4" opacity="0.08"/>
+    <circle cx="620" cy="320" r="3" opacity="0.12"/>
+    <circle cx="450" cy="450" r="6" opacity="0.06"/>
+  </g>
+  <!-- Bold gestural marks -->
+  <g stroke="#1a1a1a" fill="none" stroke-linecap="round" opacity="0.12">
+    <path d="M100 500 Q200 450 300 480" stroke-width="12"/>
+    <path d="M500 500 Q600 420 700 480" stroke-width="10"/>
+  </g>
+</svg>
