@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 
 const ARTISTS = [
   "Basquiat",
-  "Kusama",
-  "Banksy",
-  "Haring",
-  "Koons",
-  "Abramović",
-  "Hockney",
-  "Wiley",
+  "Murakami",
+  "Magritte",
+  "Mondrian",
+  "Cattelan",
+  "Hepworth",
 ];
 
 export default function Hero() {
