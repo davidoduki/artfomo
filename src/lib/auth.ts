@@ -23,7 +23,21 @@ export async function getProfile(): Promise<Profile | null> {
     .eq("id", user.id)
     .single();
 
-  return data;
+  if (data) return data;
+
+  // Profile row missing — upsert it so the user isn't stuck in a redirect loop
+  const { data: created } = await supabase
+    .from("profiles")
+    .upsert({
+      id: user.id,
+      email: user.email ?? "",
+      full_name: user.user_metadata?.full_name ?? null,
+      avatar_url: user.user_metadata?.avatar_url ?? null,
+    })
+    .select("*")
+    .single();
+
+  return created;
 }
 
 export async function isAdmin(): Promise<boolean> {
