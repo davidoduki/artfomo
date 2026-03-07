@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "user";
+export type UserRole = "admin" | "editor" | "user";
 
 // ── Subscription ────────────────────────────────────────────
 export type SubscriptionTier = "free" | "collector" | "advisor" | "pro";

@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { getMomentumColor, getMomentumIcon } from "@/data/artists";
 
 type Artist = {
   slug: string;
@@ -18,16 +19,12 @@ interface SavedClientProps {
   initialSavedSlugs: string[];
   savedArtists: Artist[];
   allArtists: Artist[];
-  getMomentumColor: (m: string) => string;
-  getMomentumIcon: (m: string) => string;
 }
 
 export function SavedClient({
   initialSavedSlugs,
   savedArtists: initialSaved,
   allArtists,
-  getMomentumColor,
-  getMomentumIcon,
 }: SavedClientProps) {
   const [savedSlugs, setSavedSlugs] = useState(initialSavedSlugs);
   const [isPending, startTransition] = useTransition();

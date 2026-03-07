@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/auth";
 import { getEffectiveTier, getSlotLimit } from "@/lib/subscription";
-import { artists, getMomentumColor, getMomentumIcon } from "@/data/artists";
+import { artists } from "@/data/artists";
 import { WatchlistClient } from "./WatchlistClient";
 
 export default async function WatchlistPage() {
@@ -30,8 +30,6 @@ export default async function WatchlistPage() {
       availableArtists={availableArtists}
       tier={tier}
       limit={limit}
-      getMomentumColor={getMomentumColor}
-      getMomentumIcon={getMomentumIcon}
     />
   );
 }

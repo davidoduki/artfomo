@@ -44,3 +44,13 @@ export async function isAdmin(): Promise<boolean> {
   const profile = await getProfile();
   return profile?.role === "admin";
 }
+
+export async function isEditor(): Promise<boolean> {
+  const profile = await getProfile();
+  return profile?.role === "editor";
+}
+
+export async function canManageBlog(): Promise<boolean> {
+  const profile = await getProfile();
+  return profile?.role === "admin" || profile?.role === "editor";
+}

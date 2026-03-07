@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NewBlogPostPage() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const generateSlug = (text: string) => {
     return text
@@ -24,10 +28,25 @@ export default function NewBlogPostPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, this saves to Supabase
-    alert("Blog post saved! (Connect Supabase to persist)");
+    setSaving(true);
+    setError(null);
+
+    const res = await fetch("/api/admin/blog", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, slug, excerpt, content, published }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error ?? "Failed to save post.");
+      setSaving(false);
+      return;
+    }
+
+    router.push("/dashboard/admin/blog");
   };
 
   return (
@@ -43,6 +62,12 @@ export default function NewBlogPostPage() {
           New Blog Post
         </h1>
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="rounded-xl border border-stone-200 bg-white p-6">
@@ -101,12 +126,7 @@ export default function NewBlogPostPage() {
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="Write your blog post content here...
-
-## Heading
-Regular paragraph text.
-
-**Bold text** and *italic text*."
+                placeholder={`Write your blog post content here...\n\n## Heading\nRegular paragraph text.\n\n**Bold text** and *italic text*.`}
                 rows={16}
                 required
                 className="mt-1 w-full rounded-lg border border-stone-300 px-4 py-3 text-sm font-mono text-stone-900 placeholder:text-stone-400 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900 resize-y"
@@ -135,9 +155,10 @@ Regular paragraph text.
         <div className="flex items-center gap-4">
           <button
             type="submit"
-            className="rounded-lg bg-stone-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800"
+            disabled={saving}
+            className="rounded-lg bg-stone-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800 disabled:opacity-60"
           >
-            {published ? "Publish Post" : "Save Draft"}
+            {saving ? "Saving…" : published ? "Publish Post" : "Save Draft"}
           </button>
           <Link
             href="/dashboard/admin/blog"

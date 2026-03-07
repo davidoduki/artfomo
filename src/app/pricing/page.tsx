@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import { BillingToggle } from "@/components/pricing/BillingToggle";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { TIER_PRICING, PRICING_FEATURE_LIST, canAccessFeature, TIER_LABELS } from "@/lib/subscription";
@@ -42,22 +43,9 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-[#fafaf8]">
-      {/* Nav */}
-      <nav className="sticky top-0 z-10 border-b border-stone-200 bg-white/80 backdrop-blur-sm px-6 py-4">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <Link href="/" className="font-serif text-lg font-bold text-stone-900">
-            Art<span className="text-red-700">FOMO</span>
-          </Link>
-          <Link
-            href="/login"
-            className="rounded-full border border-stone-300 px-4 py-1.5 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
-          >
-            Sign in
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
-      <main className="mx-auto max-w-6xl px-6 py-16">
+      <main className="mx-auto max-w-6xl px-6 pt-28 pb-16">
         {/* Hero */}
         <div className="mb-12 text-center">
           <h1 className="mb-3 font-serif text-4xl font-bold text-stone-900">

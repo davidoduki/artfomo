@@ -21,6 +21,10 @@ const proNav = [
   { label: "Exhibitions",    href: "/dashboard/pro/exhibitions", icon: "image" },
 ];
 
+const editorNav = [
+  { label: "Manage Blog", href: "/dashboard/admin/blog", icon: "file-text" },
+];
+
 const adminNav = [
   { label: "Admin Overview", href: "/dashboard/admin",          icon: "shield"     },
   { label: "Manage Artists", href: "/dashboard/admin/artists",  icon: "users"      },
@@ -245,6 +249,33 @@ export function DashboardShell({
                   <span>⬆</span>
                   Upgrade plan
                 </Link>
+              </>
+            )}
+
+            {/* Editor section */}
+            {profile.role === "editor" && (
+              <>
+                <div className="my-4 border-t border-stone-200" />
+                <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-widest text-stone-400">
+                  Editor
+                </p>
+                <div className="space-y-1">
+                  {editorNav.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                        isActive(item.href)
+                          ? "bg-stone-900 text-white"
+                          : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
+                      }`}
+                    >
+                      <NavIcon icon={item.icon} />
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
               </>
             )}
 

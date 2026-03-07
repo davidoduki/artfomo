@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { artists, getMomentumColor, getMomentumIcon } from "@/data/artists";
+import { artists } from "@/data/artists";
 import { SavedClient } from "./SavedClient";
 
 export default async function SavedArtistsPage() {
@@ -20,8 +20,6 @@ export default async function SavedArtistsPage() {
       initialSavedSlugs={savedSlugs}
       savedArtists={savedArtists}
       allArtists={artists}
-      getMomentumColor={getMomentumColor}
-      getMomentumIcon={getMomentumIcon}
     />
   );
 }

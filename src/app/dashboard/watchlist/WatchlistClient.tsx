@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { BannerUpgrade } from "@/components/subscription/BannerUpgrade";
+import { getMomentumColor, getMomentumIcon } from "@/data/artists";
 import type { SubscriptionTier } from "@/lib/types";
 
 type Artist = {
@@ -23,8 +24,6 @@ interface WatchlistClientProps {
   availableArtists: Artist[];
   tier: SubscriptionTier;
   limit: number;
-  getMomentumColor: (m: string) => string;
-  getMomentumIcon: (m: string) => string;
 }
 
 export function WatchlistClient({
@@ -33,8 +32,6 @@ export function WatchlistClient({
   availableArtists: initialAvailable,
   tier,
   limit,
-  getMomentumColor,
-  getMomentumIcon,
 }: WatchlistClientProps) {
   const [watchedSlugs, setWatchedSlugs] = useState(initialWatchedSlugs);
   const [isPending, startTransition] = useTransition();
