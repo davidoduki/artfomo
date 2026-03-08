@@ -8,6 +8,7 @@ export default function NewBlogPostPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+  const [coverImage, setCoverImage] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [published, setPublished] = useState(false);
@@ -36,7 +37,7 @@ export default function NewBlogPostPage() {
     const res = await fetch("/api/admin/blog", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, slug, excerpt, content, published }),
+      body: JSON.stringify({ title, slug, excerpt, content, published, cover_image: coverImage || null }),
     });
 
     if (!res.ok) {
@@ -100,6 +101,22 @@ export default function NewBlogPostPage() {
               />
               <p className="mt-1 text-xs text-stone-400">
                 /blog/{slug || "your-post-slug"}
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-700">
+                Cover Image URL
+              </label>
+              <input
+                type="url"
+                value={coverImage}
+                onChange={(e) => setCoverImage(e.target.value)}
+                placeholder="https://..."
+                className="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900"
+              />
+              <p className="mt-1 text-xs text-stone-400">
+                Used as the hero image on the post and thumbnail on the blog listing.
               </p>
             </div>
 

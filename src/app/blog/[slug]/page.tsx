@@ -83,8 +83,19 @@ export default async function BlogPostPage({
         </div>
       </nav>
 
+      {/* Hero image */}
+      {post.cover_image && (
+        <div className="relative mt-16 h-72 w-full overflow-hidden sm:h-96">
+          <img
+            src={post.cover_image}
+            alt={post.title}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
+
       {/* Article */}
-      <article className="pt-32 pb-24">
+      <article className={`${post.cover_image ? "pt-12" : "pt-32"} pb-24`}>
         <div className="mx-auto max-w-3xl px-6">
           {/* Breadcrumb */}
           <div className="mb-8 flex items-center gap-2 text-sm text-stone-400">

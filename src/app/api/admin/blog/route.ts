@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const body = await request.json();
-  const { title, slug, excerpt, content, published } = body;
+  const { title, slug, excerpt, content, published, cover_image } = body;
 
   if (!title || !slug || !content) {
     return NextResponse.json({ error: "title, slug, and content are required" }, { status: 400 });
@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       slug,
       excerpt: excerpt ?? null,
       content,
+      cover_image: cover_image ?? null,
       published: published ?? false,
       author_id: user!.id,
     })
