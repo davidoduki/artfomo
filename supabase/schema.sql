@@ -100,7 +100,32 @@ create policy "Users can view own saved artists"
 create policy "Users can manage own saved artists"
   on public.saved_artists for all using (auth.uid() = user_id);
 
--- 5. Updated_at trigger helper
+-- 5. Drops
+create table public.drops (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  artist_slug text not null,
+  artist_name text,
+  price text not null,
+  date text not null,
+  sold_out boolean not null default false,
+  image text,
+  description text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.drops enable row level security;
+
+create policy "Drops are viewable by everyone"
+  on public.drops for select using (true);
+
+create policy "Admins can manage drops"
+  on public.drops for all using (
+    exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
+  );
+
+-- 6. Updated_at trigger helper
 create or replace function public.update_updated_at()
 returns trigger as $$
 begin
@@ -115,4 +140,8 @@ create trigger update_profiles_updated_at
 
 create trigger update_blog_posts_updated_at
   before update on public.blog_posts
+  for each row execute procedure public.update_updated_at();
+
+create trigger update_drops_updated_at
+  before update on public.drops
   for each row execute procedure public.update_updated_at();
