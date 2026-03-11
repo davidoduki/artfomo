@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { TIER_LABELS, TIER_TAGLINES, TIER_PRICING, canAccessFeature, PRICING_FEATURE_LIST } from "@/lib/subscription";
 import type { SubscriptionTier } from "@/lib/types";
@@ -17,6 +18,8 @@ export function PricingCard({
   highlighted = false,
   currentTier,
 }: PricingCardProps) {
+  const [loading, setLoading] = useState(false);
+
   const price = isAnnual
     ? TIER_PRICING[tier].annual
     : TIER_PRICING[tier].monthly;
@@ -27,9 +30,40 @@ export function PricingCard({
   let ctaLabel = `Get ${TIER_LABELS[tier]}`;
   if (isCurrentTier) ctaLabel = "Current plan";
   else if (isFree) ctaLabel = "Get started free";
+  if (loading) ctaLabel = "Redirecting…";
 
-  // CTA href — will wire to Stripe checkout once installed
-  const ctaHref = isFree ? "/login" : `/pricing/checkout?tier=${tier}&interval=${isAnnual ? "annual" : "monthly"}`;
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier, interval: isAnnual ? "annual" : "monthly" }),
+      });
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      window.location.href = data.url;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const ctaClass = `mb-6 w-full rounded-xl py-2.5 text-center text-sm font-medium transition-colors ${
+    isCurrentTier
+      ? highlighted
+        ? "bg-white/20 text-white cursor-default"
+        : "border border-stone-200 bg-stone-50 text-stone-500 cursor-default"
+      : highlighted
+      ? "bg-white text-stone-900 hover:bg-stone-100 disabled:opacity-60"
+      : "bg-stone-900 text-white hover:bg-stone-700 disabled:opacity-60"
+  }`;
 
   return (
     <div
@@ -73,20 +107,15 @@ export function PricingCard({
       </div>
 
       {/* CTA */}
-      <Link
-        href={isCurrentTier ? "/dashboard" : ctaHref}
-        className={`mb-6 w-full rounded-xl py-2.5 text-center text-sm font-medium transition-colors ${
-          isCurrentTier
-            ? highlighted
-              ? "bg-white/20 text-white"
-              : "border border-stone-200 bg-stone-50 text-stone-500 cursor-default"
-            : highlighted
-            ? "bg-white text-stone-900 hover:bg-stone-100"
-            : "bg-stone-900 text-white hover:bg-stone-700"
-        }`}
-      >
-        {ctaLabel}
-      </Link>
+      {isCurrentTier ? (
+        <Link href="/dashboard" className={ctaClass}>{ctaLabel}</Link>
+      ) : isFree ? (
+        <Link href="/login" className={ctaClass}>{ctaLabel}</Link>
+      ) : (
+        <button onClick={handleCheckout} disabled={loading} className={ctaClass}>
+          {ctaLabel}
+        </button>
+      )}
 
       {/* Feature list */}
       <ul className="flex flex-col gap-2">
