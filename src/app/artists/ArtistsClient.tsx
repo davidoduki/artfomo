@@ -11,7 +11,7 @@ type Artist = {
   medium: string;
   location: string;
   priceRange: string;
-  momentum: string;
+  momentum: MomentumLevel;
   momentumScore: number;
   image: string;
   galleries: string[];

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { getMomentumColor, getMomentumIcon } from "@/data/artists";
+import type { MomentumLevel } from "@/data/artists";
 
 type Artist = {
   slug: string;
@@ -11,7 +12,7 @@ type Artist = {
   medium: string;
   location: string;
   priceRange: string;
-  momentum: string;
+  momentum: MomentumLevel;
   image: string;
 };
 

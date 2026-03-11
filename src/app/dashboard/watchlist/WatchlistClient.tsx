@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { BannerUpgrade } from "@/components/subscription/BannerUpgrade";
 import { getMomentumColor, getMomentumIcon } from "@/data/artists";
+import type { MomentumLevel } from "@/data/artists";
 import type { SubscriptionTier } from "@/lib/types";
 
 type Artist = {
@@ -13,7 +14,7 @@ type Artist = {
   medium: string;
   location: string;
   priceRange: string;
-  momentum: string;
+  momentum: MomentumLevel;
   momentumScore: number;
   image: string;
 };
