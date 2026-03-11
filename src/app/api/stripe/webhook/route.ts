@@ -91,6 +91,8 @@ async function handleSubscriptionUpsert(
   supabase: any,
   sub: Stripe.Subscription
 ) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const s = sub as any;
   const customerId = sub.customer as string;
   const tier = getTierFromMetadata(sub);
   const status = mapStripeStatus(sub.status);
@@ -99,12 +101,12 @@ async function handleSubscriptionUpsert(
     subscription_tier: tier,
     subscription_status: status,
     stripe_subscription_id: sub.id,
-    subscription_period_end: new Date(sub.current_period_end * 1000).toISOString(),
+    subscription_period_end: new Date(s.current_period_end * 1000).toISOString(),
     billing_interval: sub.items.data[0]?.price.recurring?.interval === "year"
       ? "annual"
       : "monthly",
-    trial_ends_at: sub.trial_end
-      ? new Date(sub.trial_end * 1000).toISOString()
+    trial_ends_at: s.trial_end
+      ? new Date(s.trial_end * 1000).toISOString()
       : null,
   };
 
@@ -121,17 +123,17 @@ async function handleSubscriptionUpsert(
       tier,
       status,
       billing_interval: profileUpdate.billing_interval,
-      current_period_start: new Date(sub.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(sub.current_period_end * 1000).toISOString(),
-      cancel_at_period_end: sub.cancel_at_period_end,
-      canceled_at: sub.canceled_at
-        ? new Date(sub.canceled_at * 1000).toISOString()
+      current_period_start: new Date(s.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(s.current_period_end * 1000).toISOString(),
+      cancel_at_period_end: s.cancel_at_period_end,
+      canceled_at: s.canceled_at
+        ? new Date(s.canceled_at * 1000).toISOString()
         : null,
-      trial_start: sub.trial_start
-        ? new Date(sub.trial_start * 1000).toISOString()
+      trial_start: s.trial_start
+        ? new Date(s.trial_start * 1000).toISOString()
         : null,
-      trial_end: sub.trial_end
-        ? new Date(sub.trial_end * 1000).toISOString()
+      trial_end: s.trial_end
+        ? new Date(s.trial_end * 1000).toISOString()
         : null,
     },
     { onConflict: "stripe_subscription_id" }
