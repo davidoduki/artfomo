@@ -2,7 +2,8 @@ import Stripe from "stripe";
 import type { SubscriptionTier, BillingInterval } from "./types";
 
 // Singleton Stripe instance (server-side only)
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Key may be absent during build — actual calls will fail at runtime if not configured
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "sk_placeholder", {
   apiVersion: "2026-02-25.clover",
   typescript: true,
 });
