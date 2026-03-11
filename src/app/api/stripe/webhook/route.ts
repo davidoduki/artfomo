@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.customer && invoice.subscription) {
+        if (invoice.customer) {
           await supabase
             .from("profiles")
             .update({ subscription_status: "active" })
