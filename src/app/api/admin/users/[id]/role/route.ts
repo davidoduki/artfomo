@@ -7,12 +7,13 @@ const VALID_ROLES: UserRole[] = ["admin", "editor", "user"];
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const { id } = await params;
   const body = await request.json();
   const role: UserRole = body.role;
 
@@ -22,7 +23,7 @@ export async function PATCH(
 
   // Prevent admin from demoting themselves
   const self = await getProfile();
-  if (self?.id === params.id && role !== "admin") {
+  if (self?.id === id && role !== "admin") {
     return NextResponse.json({ error: "You cannot remove your own admin role" }, { status: 400 });
   }
 
@@ -31,7 +32,7 @@ export async function PATCH(
   const { data, error } = await supabase
     .from("profiles")
     .update({ role })
-    .eq("id", params.id)
+    .eq("id", id)
     .select("id, email, role")
     .single();
 
