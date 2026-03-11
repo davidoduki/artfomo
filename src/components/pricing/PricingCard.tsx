@@ -41,7 +41,7 @@ export function PricingCard({
         body: JSON.stringify({ tier, interval: isAnnual ? "annual" : "monthly" }),
       });
       if (res.status === 401) {
-        window.location.href = "/login";
+        window.location.href = "/login?redirect=/pricing";
         return;
       }
       const data = await res.json();

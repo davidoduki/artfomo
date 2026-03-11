@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { TrialCountdownBanner } from "@/components/subscription/TrialCountdownBanner";
-import { TIER_LABELS, TIER_ORDER } from "@/lib/subscription";
+import { TIER_LABELS, TIER_ORDER, TIER_PRICING } from "@/lib/subscription";
 import type { Profile, SubscriptionTier } from "@/lib/types";
 
 const userNav = [
@@ -141,6 +141,8 @@ export function DashboardShell({
 
   const tier = profile.subscription_tier ?? "free";
   const isProOrAdvisor = TIER_ORDER[tier] >= TIER_ORDER["advisor"];
+  const allTiers: SubscriptionTier[] = ["collector", "advisor", "pro"];
+  const upgradeTiers = allTiers.filter((t) => TIER_ORDER[t] > TIER_ORDER[tier]);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -321,13 +323,33 @@ export function DashboardShell({
                 <p className="truncate text-sm font-medium text-stone-900">
                   {profile.full_name || "User"}
                 </p>
+                <p className="truncate text-xs text-stone-400">{profile.email}</p>
                 <span
-                  className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${TIER_BADGE_COLORS[tier]}`}
+                  className={`mt-0.5 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${TIER_BADGE_COLORS[tier]}`}
                 >
                   {TIER_LABELS[tier]}
                 </span>
               </div>
             </div>
+
+            {/* Upgrade CTAs — only tiers above current */}
+            {upgradeTiers.length > 0 && (
+              <div className="mb-3 space-y-1">
+                {upgradeTiers.map((t) => (
+                  <Link
+                    key={t}
+                    href="/pricing"
+                    className="flex items-center justify-between rounded-lg bg-stone-50 px-3 py-2 text-xs font-medium text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
+                  >
+                    <span>Upgrade to {TIER_LABELS[t]}</span>
+                    <span className="text-stone-400">
+                      ${TIER_PRICING[t].annual}/mo →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
+
             <button
               onClick={handleSignOut}
               className="w-full rounded-lg border border-stone-200 px-3 py-2 text-sm text-stone-600 transition hover:bg-stone-50 hover:text-stone-900"
