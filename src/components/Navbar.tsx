@@ -47,7 +47,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/pricing"
-            className="text-sm font-medium text-stone-500 transition hover:text-stone-900"
+            className="rounded-full border border-red-700 px-4 py-1.5 text-sm font-medium text-red-700 transition hover:bg-red-700 hover:text-white"
           >
             Pricing
           </Link>
