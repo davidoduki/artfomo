@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { Drop } from "@/lib/types";
 
 export default function DropsClient() {
-  const router = useRouter();
   const [drops, setDrops] = useState<Drop[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "available" | "sold_out">("all");
@@ -14,12 +13,20 @@ export default function DropsClient() {
 
   const loadDrops = useCallback(async () => {
     setLoading(true);
-    const res = await fetch("/api/admin/drops");
-    if (res.ok) {
-      const data = await res.json();
-      setDrops(data);
+    try {
+      const res = await fetch("/api/admin/drops");
+      if (res.ok) {
+        const data = await res.json();
+        setDrops(data);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setActionError(data.error ?? "Failed to load drops.");
+      }
+    } catch {
+      setActionError("Network error — could not load drops.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -27,30 +34,38 @@ export default function DropsClient() {
   }, [loadDrops]);
 
   const handleMarkSold = async (id: string) => {
-    const res = await fetch(`/api/admin/drops/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sold_out: true }),
-    });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setActionError(data.error ?? "Failed to mark as sold.");
-      return;
+    try {
+      const res = await fetch(`/api/admin/drops/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sold_out: true }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setActionError(data.error ?? "Failed to mark as sold.");
+        return;
+      }
+      setActionError(null);
+      await loadDrops();
+    } catch {
+      setActionError("Network error — could not update drop.");
     }
-    setActionError(null);
-    await loadDrops();
   };
 
   const handleDelete = async (id: string, title: string) => {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    const res = await fetch(`/api/admin/drops/${id}`, { method: "DELETE" });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setActionError(data.error ?? "Failed to delete drop.");
-      return;
+    try {
+      const res = await fetch(`/api/admin/drops/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setActionError(data.error ?? "Failed to delete drop.");
+        return;
+      }
+      setActionError(null);
+      await loadDrops();
+    } catch {
+      setActionError("Network error — could not delete drop.");
     }
-    setActionError(null);
-    await loadDrops();
   };
 
   const filtered = drops
@@ -78,15 +93,15 @@ export default function DropsClient() {
             {availableCount} available
           </p>
         </div>
-        <button
-          onClick={() => router.push("/dashboard/admin/drops/new")}
+        <Link
+          href="/dashboard/admin/drops/new"
           className="inline-flex items-center gap-2 rounded-lg bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path d="M12 5v14M5 12h14" />
           </svg>
           New Drop
-        </button>
+        </Link>
       </div>
 
       {/* Filters */}
@@ -164,12 +179,12 @@ export default function DropsClient() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => router.push(`/dashboard/admin/drops/${drop.id}/edit`)}
+                        <Link
+                          href={`/dashboard/admin/drops/${drop.id}/edit`}
                           className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
                         >
                           Edit
-                        </button>
+                        </Link>
                         {!drop.sold_out && (
                           <button
                             onClick={() => handleMarkSold(drop.id)}
