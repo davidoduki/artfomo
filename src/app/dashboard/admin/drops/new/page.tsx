@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function NewDropPage() {
-  const router = useRouter();
   const [title, setTitle] = useState("");
   const [artistSlug, setArtistSlug] = useState("");
   const [artistName, setArtistName] = useState("");
@@ -44,7 +42,7 @@ export default function NewDropPage() {
       return;
     }
 
-    router.push("/dashboard/admin/drops");
+    window.location.href = "/dashboard/admin/drops";
   };
 
   return (

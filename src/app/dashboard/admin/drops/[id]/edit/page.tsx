@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function EditDropPage() {
-  const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
   const [title, setTitle] = useState("");
@@ -67,7 +66,7 @@ export default function EditDropPage() {
       return;
     }
 
-    router.push("/dashboard/admin/drops");
+    window.location.href = "/dashboard/admin/drops";
   };
 
   if (loading) {
