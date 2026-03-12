@@ -10,6 +10,7 @@ export default function DropsClient() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "available" | "sold_out">("all");
   const [search, setSearch] = useState("");
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const loadDrops = useCallback(async () => {
     setLoading(true);
@@ -26,18 +27,30 @@ export default function DropsClient() {
   }, [loadDrops]);
 
   const handleMarkSold = async (id: string) => {
-    await fetch(`/api/admin/drops/${id}`, {
+    const res = await fetch(`/api/admin/drops/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sold_out: true }),
     });
-    loadDrops();
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setActionError(data.error ?? "Failed to mark as sold.");
+      return;
+    }
+    setActionError(null);
+    await loadDrops();
   };
 
   const handleDelete = async (id: string, title: string) => {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    await fetch(`/api/admin/drops/${id}`, { method: "DELETE" });
-    loadDrops();
+    const res = await fetch(`/api/admin/drops/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setActionError(data.error ?? "Failed to delete drop.");
+      return;
+    }
+    setActionError(null);
+    await loadDrops();
   };
 
   const filtered = drops
@@ -101,6 +114,13 @@ export default function DropsClient() {
           ))}
         </div>
       </div>
+
+      {/* Action error */}
+      {actionError && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {actionError}
+        </div>
+      )}
 
       {/* Drops table */}
       <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">

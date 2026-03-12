@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { isAdmin } from "@/lib/auth";
+
+function getAdminDb() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 export async function GET() {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const supabase = await createClient();
+  const supabase = getAdminDb();
   const { data, error } = await supabase
     .from("drops")
     .select("*")
@@ -25,7 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const supabase = await createClient();
+  const supabase = getAdminDb();
   const body = await request.json();
   const { title, artist_slug, artist_name, price, date, sold_out, image, description } = body;
 
