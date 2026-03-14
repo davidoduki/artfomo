@@ -10,6 +10,20 @@ export default function DropsClient() {
   const [search, setSearch] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
 
+  // Modal state
+  const [modal, setModal] = useState<"new" | "edit" | null>(null);
+  const [editDrop, setEditDrop] = useState<Drop | null>(null);
+  const [formTitle, setFormTitle] = useState("");
+  const [formArtistSlug, setFormArtistSlug] = useState("");
+  const [formArtistName, setFormArtistName] = useState("");
+  const [formPrice, setFormPrice] = useState("");
+  const [formDate, setFormDate] = useState("");
+  const [formDescription, setFormDescription] = useState("");
+  const [formImage, setFormImage] = useState("");
+  const [formSoldOut, setFormSoldOut] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
   const loadDrops = useCallback(async () => {
     setLoading(true);
     try {
@@ -31,6 +45,70 @@ export default function DropsClient() {
   useEffect(() => {
     loadDrops();
   }, [loadDrops]);
+
+  const openNew = () => {
+    setEditDrop(null);
+    setFormTitle("");
+    setFormArtistSlug("");
+    setFormArtistName("");
+    setFormPrice("");
+    setFormDate("");
+    setFormDescription("");
+    setFormImage("");
+    setFormSoldOut(false);
+    setFormError(null);
+    setModal("new");
+  };
+
+  const openEdit = (drop: Drop) => {
+    setEditDrop(drop);
+    setFormTitle(drop.title);
+    setFormArtistSlug(drop.artist_slug);
+    setFormArtistName(drop.artist_name ?? "");
+    setFormPrice(drop.price);
+    setFormDate(drop.date);
+    setFormDescription(drop.description ?? "");
+    setFormImage(drop.image ?? "");
+    setFormSoldOut(drop.sold_out);
+    setFormError(null);
+    setModal("edit");
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setFormError(null);
+    const body = {
+      title: formTitle,
+      artist_slug: formArtistSlug,
+      artist_name: formArtistName || null,
+      price: formPrice,
+      date: formDate,
+      description: formDescription || null,
+      image: formImage || null,
+      sold_out: formSoldOut,
+    };
+    const url = modal === "edit" ? `/api/admin/drops/${editDrop!.id}` : "/api/admin/drops";
+    const method = modal === "edit" ? "PATCH" : "POST";
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setFormError(data.error ?? "Failed to save drop.");
+        setSaving(false);
+        return;
+      }
+      setModal(null);
+      await loadDrops();
+    } catch {
+      setFormError("Network error — could not save drop.");
+      setSaving(false);
+    }
+  };
 
   const handleMarkSold = async (id: string) => {
     try {
@@ -82,8 +160,159 @@ export default function DropsClient() {
   const soldOutCount = drops.filter((d) => d.sold_out).length;
   const availableCount = drops.filter((d) => !d.sold_out).length;
 
+  const inputClass =
+    "mt-1 w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900";
+
   return (
     <div>
+      {/* Inline modal for New / Edit */}
+      {modal && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/50"
+          onClick={() => setModal(null)}
+        >
+          <div
+            className="mx-auto my-8 max-w-2xl rounded-xl border border-stone-200 bg-white p-8 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="mb-6 text-xl font-bold text-stone-900">
+              {modal === "new" ? "New Drop" : "Edit Drop"}
+            </h2>
+
+            {formError && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleFormSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-stone-700">
+                  Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  placeholder="Drop title"
+                  required
+                  className={inputClass}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-stone-700">
+                    Artist Slug <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formArtistSlug}
+                    onChange={(e) => setFormArtistSlug(e.target.value)}
+                    placeholder="artist-name"
+                    required
+                    className={`${inputClass} font-mono`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700">
+                    Artist Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formArtistName}
+                    onChange={(e) => setFormArtistName(e.target.value)}
+                    placeholder="Display name"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-stone-700">
+                    Price <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formPrice}
+                    onChange={(e) => setFormPrice(e.target.value)}
+                    placeholder="$1,200"
+                    required
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700">
+                    Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={formDate}
+                    onChange={(e) => setFormDate(e.target.value)}
+                    required
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-stone-700">
+                  Image URL
+                </label>
+                <input
+                  type="url"
+                  value={formImage}
+                  onChange={(e) => setFormImage(e.target.value)}
+                  placeholder="https://..."
+                  className={inputClass}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-stone-700">
+                  Description
+                </label>
+                <textarea
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                  placeholder="Brief description of the drop..."
+                  rows={3}
+                  className={`${inputClass} resize-none`}
+                />
+              </div>
+
+              <label className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={formSoldOut}
+                  onChange={(e) => setFormSoldOut(e.target.checked)}
+                  className="h-4 w-4 rounded border-stone-300 text-stone-900 focus:ring-stone-900"
+                />
+                <span className="text-sm text-stone-700">Mark as Sold Out</span>
+              </label>
+
+              <div className="flex items-center gap-4 pt-2">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-lg bg-stone-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800 disabled:opacity-60"
+                >
+                  {saving ? "Saving…" : modal === "new" ? "Create Drop" : "Save Changes"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModal(null)}
+                  className="rounded-lg border border-stone-200 px-6 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-stone-900">Manage Drops</h1>
@@ -92,15 +321,16 @@ export default function DropsClient() {
             {availableCount} available
           </p>
         </div>
-        <a
-          href="/dashboard/admin/drops/new"
+        <button
+          type="button"
+          onClick={openNew}
           className="inline-flex items-center gap-2 rounded-lg bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path d="M12 5v14M5 12h14" />
           </svg>
           New Drop
-        </a>
+        </button>
       </div>
 
       {/* Filters */}
@@ -178,14 +408,16 @@ export default function DropsClient() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <a
-                          href={`/dashboard/admin/drops/${drop.id}/edit`}
+                        <button
+                          type="button"
+                          onClick={() => openEdit(drop)}
                           className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
                         >
                           Edit
-                        </a>
+                        </button>
                         {!drop.sold_out && (
                           <button
+                            type="button"
                             onClick={() => handleMarkSold(drop.id)}
                             className="rounded-lg border border-amber-200 px-3 py-1.5 text-xs font-medium text-amber-700 transition hover:bg-amber-50"
                           >
@@ -193,6 +425,7 @@ export default function DropsClient() {
                           </button>
                         )}
                         <button
+                          type="button"
                           onClick={() => handleDelete(drop.id, drop.title)}
                           className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-50"
                         >
@@ -209,7 +442,9 @@ export default function DropsClient() {
 
         {!loading && filtered.length === 0 && (
           <div className="py-12 text-center text-stone-400">
-            {drops.length === 0 ? "No drops yet. Click \"New Drop\" to add one." : "No drops match your filters."}
+            {drops.length === 0
+              ? 'No drops yet. Click "New Drop" to add one.'
+              : "No drops match your filters."}
           </div>
         )}
       </div>
