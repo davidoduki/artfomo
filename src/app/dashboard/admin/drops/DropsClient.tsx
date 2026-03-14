@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import type { Drop } from "@/lib/types";
 
 export default function DropsClient() {
@@ -93,15 +92,15 @@ export default function DropsClient() {
             {availableCount} available
           </p>
         </div>
-        <Link
-          href="/dashboard/admin/drops/new"
+        <button
+          onClick={() => { window.location.href = "/dashboard/admin/drops/new"; }}
           className="inline-flex items-center gap-2 rounded-lg bg-stone-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-stone-800"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path d="M12 5v14M5 12h14" />
           </svg>
           New Drop
-        </Link>
+        </button>
       </div>
 
       {/* Filters */}
@@ -179,12 +178,12 @@ export default function DropsClient() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <Link
-                          href={`/dashboard/admin/drops/${drop.id}/edit`}
+                        <button
+                          onClick={() => { window.location.href = `/dashboard/admin/drops/${drop.id}/edit`; }}
                           className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:bg-stone-50"
                         >
                           Edit
-                        </Link>
+                        </button>
                         {!drop.sold_out && (
                           <button
                             onClick={() => handleMarkSold(drop.id)}
