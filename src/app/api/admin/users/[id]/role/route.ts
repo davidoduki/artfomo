@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { isAdmin, getProfile } from "@/lib/auth";
 import type { UserRole } from "@/lib/types";
+
+function getAdminDb() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
 const VALID_ROLES: UserRole[] = ["admin", "editor", "user"];
 
@@ -27,7 +34,7 @@ export async function PATCH(
     return NextResponse.json({ error: "You cannot remove your own admin role" }, { status: 400 });
   }
 
-  const supabase = await createClient();
+  const supabase = getAdminDb();
 
   const { data, error } = await supabase
     .from("profiles")
