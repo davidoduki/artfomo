@@ -16,14 +16,29 @@ export async function GET() {
 
   const supabase = getAdminDb();
 
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("id, email, full_name, role, subscription_tier, created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  // Use auth admin API to get all real users (not just profile rows)
+  const { data: authData, error: authErr } = await supabase.auth.admin.listUsers();
+  if (authErr) {
+    return NextResponse.json({ error: authErr.message }, { status: 500 });
   }
 
-  return NextResponse.json(data);
+  // Get profile role data — only columns that actually exist in the schema
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, role");
+
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+
+  const merged = authData.users
+    .map((u) => ({
+      id: u.id,
+      email: u.email ?? "",
+      full_name: (u.user_metadata?.full_name as string | null) ?? null,
+      role: profileMap.get(u.id)?.role ?? "user",
+      subscription_tier: "free",
+      created_at: u.created_at,
+    }))
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+  return NextResponse.json(merged);
 }
